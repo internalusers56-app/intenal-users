@@ -1,11 +1,11 @@
 //
 // File: script.js
-// Berisi logika SPA (loadPage) dan logika Sidebar Responsif
+// Perbaikan: Menghapus manipulasi margin-left yang redundan
 //
 
 const sidebar = document.getElementById('sidebar');
 const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-const mainContent = document.getElementById('mainContent');
+const mainContent = document.getElementById('mainContent'); // Tetap diperlukan
 const pageTitle = document.getElementById('pageTitle');
 const menuToggleBtn = document.getElementById('menuToggleBtn');
 const closeSidebarBtn = document.getElementById('closeSidebarBtn');
@@ -22,11 +22,9 @@ function toggleSidebar() {
         sidebar.classList.toggle('open');
         sidebarBackdrop.classList.toggle('open');
         
-        // Mengatur tampilan backdrop
         if (sidebar.classList.contains('open')) {
             sidebarBackdrop.classList.remove('hidden');
         } else {
-            // Berikan waktu untuk transisi opacity sebelum menyembunyikan sepenuhnya
             setTimeout(() => {
                 sidebarBackdrop.classList.add('hidden');
             }, 300); 
@@ -40,12 +38,12 @@ function toggleSidebar() {
             // Collapse
             sidebar.classList.remove('sidebar-expanded');
             sidebar.classList.add('sidebar-collapsed');
-            mainContent.style.marginLeft = '70px'; // CSS handles this, but JS can force it
+            // mainContent.style.marginLeft = '70px'; // DIHAPUS - Dibiarkan Flexbox yang mengatur
         } else {
             // Expand
             sidebar.classList.remove('sidebar-collapsed');
             sidebar.classList.add('sidebar-expanded');
-            mainContent.style.marginLeft = '240px'; // CSS handles this, but JS can force it
+            // mainContent.style.marginLeft = '240px'; // DIHAPUS - Dibiarkan Flexbox yang mengatur
         }
     }
 }
@@ -57,15 +55,20 @@ closeSidebarBtn.addEventListener('click', toggleSidebar);
 function handleResize() {
     if (window.innerWidth >= 1024) {
         // Desktop: Pastikan sidebar diatur untuk collapse/expand
-        sidebar.classList.remove('open', 'mobile-hidden');
+        sidebar.classList.remove('open');
         sidebarBackdrop.classList.add('hidden');
         sidebarBackdrop.classList.remove('open');
-        // Pastikan style margin kiri diatur ulang
-        mainContent.style.marginLeft = sidebar.classList.contains('sidebar-expanded') ? '240px' : '70px';
+        mainContent.style.marginLeft = '0px'; // Pastikan margin 0 di desktop (karena sudah flex)
+        
+        // Atur status desktop awal (default: expanded)
+        if (!sidebar.classList.contains('sidebar-collapsed') && !sidebar.classList.contains('sidebar-expanded')) {
+             sidebar.classList.add('sidebar-expanded');
+        }
+
     } else {
         // Mobile: Pastikan sidebar disembunyikan
-        sidebar.classList.remove('sidebar-expanded', 'sidebar-collapsed');
         sidebar.classList.add('sidebar-expanded'); // Atur ulang ke expanded untuk mobile
+        sidebar.classList.remove('sidebar-collapsed');
         sidebar.classList.remove('open');
         mainContent.style.marginLeft = '0px';
     }
@@ -78,10 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load halaman default saat pertama kali load
     const defaultMenuItem = document.querySelector('.menu-item.active-menu');
     if (defaultMenuItem) {
-        // Gunakan onclick yang sudah ada di HTML, tapi panggil secara programatik
+        // Panggil loadPage untuk memuat konten default
         loadPage(defaultMenuItem.getAttribute('onclick').split("'")[1], defaultMenuItem);
     } else {
-         pageTitle.innerText = "Dashboard"; // Fallback
+         pageTitle.innerText = "Dashboard"; 
     }
 });
 
@@ -101,7 +104,6 @@ function loadPage(page, element) {
     fetch(page)
         .then(res => {
             if (!res.ok) {
-                // Tangani error HTTP (misalnya 404)
                 return '<h1>Halaman Tidak Ditemukan (404)</h1><p>Konten untuk URL: ' + page + ' gagal dimuat.</p>';
             }
             return res.text();
