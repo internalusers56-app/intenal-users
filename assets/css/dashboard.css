@@ -1,6 +1,6 @@
 /*
  * File: style.css
- * Berisi CSS kustom untuk Sidebar dan Responsivitas
+ * Perbaikan: Menghapus margin-left ganda yang menyebabkan ruang kosong
  */
 
 /* ======================================= */
@@ -15,41 +15,41 @@
     width: 70px; 
 }
 
-/* Style Menu Item Aktif */
+/* Style Menu Item Aktif (Menggunakan warna yang solid agar lebih kontras) */
 .active-menu { 
-    background-color: rgba(59,130,246,0.25); /* Biru muda transparan */
-    border-left: 3px solid #3b82f6; /* Garis biru di kiri */
+    /* Menggunakan warna biru gelap yang kontras dengan bg-gray-900 */
+    background-color: #1f2937; /* Darker than the sidebar base */
+    border-left: 3px solid #3b82f6; /* Garis biru di kiri untuk penanda */
 }
 
 /* Menyembunyikan teks menu saat collapsed */
 .sidebar-collapsed .menu-text {
     opacity: 0;
-    transition: opacity 0.1s ease-out; /* Transisi untuk menyembunyikan */
+    transition: opacity 0.1s ease-out;
 }
 
 .sidebar-expanded .menu-text {
     opacity: 1;
-    transition: opacity 0.3s ease-in; /* Transisi untuk menampilkan */
+    transition: opacity 0.3s ease-in;
 }
 
 /* Mengatur padding/jarak ikon menu saat collapsed */
 .sidebar-collapsed .menu-item {
     justify-content: center; /* Ikon berada di tengah */
+    padding-left: 0;
+    padding-right: 0;
 }
 .sidebar-expanded .menu-item {
-    justify-content: flex-start; /* Ikon berada di kiri */
+    justify-content: flex-start;
 }
 
-/* Mengatur lebar header APP saat collapsed */
-.sidebar-collapsed .menu-text {
-    display: none;
-}
-.sidebar-collapsed .p-4 span {
+/* Menyembunyikan judul 'MY APP' saat collapsed */
+.sidebar-collapsed .p-4 .menu-text {
     display: none;
 }
 
 /* ======================================= */
-/* 2. Mobile Specific Styles (Handle by JS/Tailwind but safe to define here) */
+/* 2. Mobile Specific Styles */
 /* ======================================= */
 
 /* Backdrop (Overlay) saat mobile menu terbuka */
@@ -58,25 +58,12 @@
     display: block;
 }
 
-/* Mobile Sidebar - Perlu didefinisikan di JS, tapi ini adalah status 'open' mobile */
+/* Status 'open' untuk mobile sidebar */
 #sidebar.open {
     transform: translateX(0);
 }
 
-/* Mengatur area konten agar tidak terjadi tumpang tindih saat sidebar dibuka di mobile (lg ke atas) */
-@media (min-width: 1024px) {
-    .sidebar-expanded ~ #mainContent {
-        margin-left: 240px;
-    }
-    .sidebar-collapsed ~ #mainContent {
-        margin-left: 70px;
-    }
-}
-
-/* Pastikan body dan main mengambil tinggi penuh di semua perangkat */
-html, body {
-    height: 100%;
-}
-#contentArea {
-    height: 100%; /* Agar konten bisa di-scroll di dalam main area */
-}
+/* PENTING: Menghapus aturan margin-left yang redundan
+   Karena body menggunakan display:flex, flex-1 pada #mainContent
+   sudah memastikan ia mengisi sisa ruang tanpa margin tambahan.
+*/
