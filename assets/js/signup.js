@@ -1,15 +1,15 @@
 // ===================================================================================
 // GANTI DENGAN URL WEB APP GAS YANG SUDAH DI-DEPLOY!
-// Pastikan URL ini adalah versi 'exec' dari deployment Anda.
 // ===================================================================================
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzMCXwyyyVHPW3Qvt-Ff8-MW2EfV_j8rAYNIs1EjbOa3of-5-Btk5nSUlwF0wJ_LRpJvA/exec'; 
 
 const signupForm = document.getElementById('signup-form');
 const signupButton = document.getElementById('signup-button');
 const toastContainer = document.getElementById('toast-container');
-const roleSelect = document.getElementById('role-select');
 const passwordInput = document.getElementById('password-input');
 const loginEye = document.getElementById('loginEye');
+
+// --- Hapus const roleSelect ---
 
 // ===========================================
 // FUNGSI UTILITY (Toast & Loading)
@@ -25,21 +25,18 @@ function showToast(message, type) {
     toast.className = `toast ${type}`;
     toast.textContent = message;
     
-    // Menghapus toast sebelumnya (jika ada)
     toastContainer.innerHTML = ''; 
     toastContainer.appendChild(toast);
     
-    // Menampilkan toast dengan animasi
     setTimeout(() => {
         toast.classList.add('show');
     }, 100);
 
-    // Menyembunyikan dan menghapus setelah 5 detik
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
             toast.remove();
-        }, 500); // Tunggu sampai animasi opacity selesai
+        }, 500); 
     }, 5000);
 }
 
@@ -49,50 +46,15 @@ function showToast(message, type) {
  */
 function setLoadingState(isLoading) {
     if (isLoading) {
-        signupButton.disabled = true; // KUNCI TOMBOL
+        signupButton.disabled = true; 
         signupButton.innerHTML = '<span class="loading-spinner"></span> Mendaftar...';
     } else {
-        signupButton.disabled = false; // AKTIFKAN KEMBALI TOMBOL
+        signupButton.disabled = false; 
         signupButton.innerHTML = 'Daftar Sekarang';
     }
 }
 
-// ===========================================
-// FUNGSI INISIALISASI (Mengisi Dropdown Role) - MENGGUNAKAN POST UNTUK MENGATASI CORS
-// ===========================================
-
-async function loadRoles() {
-    try {
-        // Kirim POST request dengan payload apiAction: 'getRoles'
-        const response = await fetch(GAS_WEB_APP_URL, {
-            method: 'POST', 
-            redirect: 'follow', 
-            headers: {
-                // Header ini diperlukan oleh GAS untuk memproses JSON
-                'Content-Type': 'text/plain;charset=utf-8', 
-            },
-            body: JSON.stringify({ apiAction: 'getRoles' })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success && Array.isArray(result.data)) {
-            const roles = result.data;
-            roles.forEach(role => {
-                const option = document.createElement('option');
-                option.value = role; 
-                option.textContent = role;
-                roleSelect.appendChild(option);
-            });
-        } else {
-             showToast('Gagal memuat daftar Role dari GAS.', 'error');
-        }
-
-    } catch (error) {
-        console.error('Gagal memuat role dari GAS:', error);
-        showToast('Gagal terhubung ke server untuk memuat Role. Coba refresh halaman.', 'error');
-    }
-}
+// --- Hapus fungsi loadRoles ---
 
 // ===========================================
 // LOGIKA FORM SUBMISSION
@@ -101,13 +63,13 @@ async function loadRoles() {
 signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    // 1. Ambil data dari form
+    // 1. Ambil data dari form (tanpa id_role)
     const formData = {
         fullname: document.getElementById('fullname-input').value.trim(),
         whatsapp: document.getElementById('whatsapp-input').value.trim(),
         email: document.getElementById('email-input').value.trim(),
-        id_role: roleSelect.value, 
         password: document.getElementById('password-input').value,
+        // id_role dihilangkan dari payload
     };
 
     // 2. Validasi sisi klien
@@ -128,7 +90,6 @@ signupForm.addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'text/plain;charset=utf-8', 
             },
-            // Tidak perlu apiAction di sini, karena doPost GAS akan mengarahkan ke processSignup
             body: JSON.stringify(formData)
         });
 
@@ -137,8 +98,7 @@ signupForm.addEventListener('submit', async (e) => {
         if (result.success) {
             showToast(result.message, 'success');
             signupForm.reset(); 
-            // Reset dropdown ke opsi default
-            roleSelect.value = ""; 
+            // Hapus: roleSelect.value = ""; 
         } else {
             showToast(result.message, 'error');
         }
@@ -156,8 +116,7 @@ signupForm.addEventListener('submit', async (e) => {
 // FUNGSI TAMBAHAN (On Load dan Password Toggle)
 // ===========================================
 
-// Panggil fungsi untuk mengisi dropdown saat halaman dimuat
-document.addEventListener('DOMContentLoaded', loadRoles);
+// Hapus: document.addEventListener('DOMContentLoaded', loadRoles);
 
 // FUNGSI SHOW/HIDE PASSWORD
 loginEye.addEventListener('click', () => {
