@@ -1,13 +1,12 @@
 /*
  * File: style.css
- * Perbaikan: Menghapus margin-left ganda yang menyebabkan ruang kosong
+ * Perbaikan: Menjadikan ikon menu di tengah saat sidebar di-collapse
  */
 
 /* ======================================= */
 /* 1. Desktop & Global Styles */
 /* ======================================= */
 
-/* Lebar Sidebar Default (Expanded) dan Collapsed (Desktop) */
 .sidebar-expanded { 
     width: 240px; 
 }
@@ -15,17 +14,29 @@
     width: 70px; 
 }
 
-/* Style Menu Item Aktif (Menggunakan warna yang solid agar lebih kontras) */
+/* Style Menu Item Aktif (Solid Color) */
 .active-menu { 
-    /* Menggunakan warna biru gelap yang kontras dengan bg-gray-900 */
-    background-color: #1f2937; /* Darker than the sidebar base */
-    border-left: 3px solid #3b82f6; /* Garis biru di kiri untuk penanda */
+    background-color: #1f2937; /* Biru gelap untuk kontras */
+    border-left: 3px solid #3b82f6; 
 }
 
 /* Menyembunyikan teks menu saat collapsed */
 .sidebar-collapsed .menu-text {
     opacity: 0;
     transition: opacity 0.1s ease-out;
+    display: none; /* Disembunyikan sepenuhnya untuk menghindari masalah layout */
+}
+
+/* Mengatur padding/jarak ikon menu saat collapsed */
+.sidebar-collapsed .menu-item {
+    /* PENTING: Menimpa padding horizontal p-3 (12px) untuk centering yang sempurna */
+    padding-left: 0; 
+    padding-right: 0;
+    justify-content: center; /* Center anak-anaknya */
+}
+/* Menambahkan padding horizontal sedikit pada span ikon untuk menjaga jarak dari tepi sidebar */
+.sidebar-collapsed .menu-item > span:first-child {
+    padding: 0 10px;
 }
 
 .sidebar-expanded .menu-text {
@@ -33,37 +44,26 @@
     transition: opacity 0.3s ease-in;
 }
 
-/* Mengatur padding/jarak ikon menu saat collapsed */
-.sidebar-collapsed .menu-item {
-    justify-content: center; /* Ikon berada di tengah */
-    padding-left: 0;
-    padding-right: 0;
+/* Mengatur Sidebar Header saat Collapsed */
+.sidebar-collapsed .sidebar-header {
+    /* Menghapus padding agar hanya menyisakan ruang minimal (tinggi tetap) */
+    padding: 1rem 0; 
+    justify-content: center;
 }
-.sidebar-expanded .menu-item {
-    justify-content: flex-start;
+.sidebar-collapsed .sidebar-header .menu-text {
+    display: none; /* Menyembunyikan judul 'MY APP' */
 }
 
-/* Menyembunyikan judul 'MY APP' saat collapsed */
-.sidebar-collapsed .p-4 .menu-text {
-    display: none;
-}
 
 /* ======================================= */
 /* 2. Mobile Specific Styles */
 /* ======================================= */
 
-/* Backdrop (Overlay) saat mobile menu terbuka */
 #sidebarBackdrop.open {
     opacity: 0.5;
     display: block;
 }
 
-/* Status 'open' untuk mobile sidebar */
 #sidebar.open {
     transform: translateX(0);
 }
-
-/* PENTING: Menghapus aturan margin-left yang redundan
-   Karena body menggunakan display:flex, flex-1 pada #mainContent
-   sudah memastikan ia mengisi sisa ruang tanpa margin tambahan.
-*/
