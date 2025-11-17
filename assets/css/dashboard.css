@@ -1,0 +1,82 @@
+/*
+ * File: style.css
+ * Berisi CSS kustom untuk Sidebar dan Responsivitas
+ */
+
+/* ======================================= */
+/* 1. Desktop & Global Styles */
+/* ======================================= */
+
+/* Lebar Sidebar Default (Expanded) dan Collapsed (Desktop) */
+.sidebar-expanded { 
+    width: 240px; 
+}
+.sidebar-collapsed { 
+    width: 70px; 
+}
+
+/* Style Menu Item Aktif */
+.active-menu { 
+    background-color: rgba(59,130,246,0.25); /* Biru muda transparan */
+    border-left: 3px solid #3b82f6; /* Garis biru di kiri */
+}
+
+/* Menyembunyikan teks menu saat collapsed */
+.sidebar-collapsed .menu-text {
+    opacity: 0;
+    transition: opacity 0.1s ease-out; /* Transisi untuk menyembunyikan */
+}
+
+.sidebar-expanded .menu-text {
+    opacity: 1;
+    transition: opacity 0.3s ease-in; /* Transisi untuk menampilkan */
+}
+
+/* Mengatur padding/jarak ikon menu saat collapsed */
+.sidebar-collapsed .menu-item {
+    justify-content: center; /* Ikon berada di tengah */
+}
+.sidebar-expanded .menu-item {
+    justify-content: flex-start; /* Ikon berada di kiri */
+}
+
+/* Mengatur lebar header APP saat collapsed */
+.sidebar-collapsed .menu-text {
+    display: none;
+}
+.sidebar-collapsed .p-4 span {
+    display: none;
+}
+
+/* ======================================= */
+/* 2. Mobile Specific Styles (Handle by JS/Tailwind but safe to define here) */
+/* ======================================= */
+
+/* Backdrop (Overlay) saat mobile menu terbuka */
+#sidebarBackdrop.open {
+    opacity: 0.5;
+    display: block;
+}
+
+/* Mobile Sidebar - Perlu didefinisikan di JS, tapi ini adalah status 'open' mobile */
+#sidebar.open {
+    transform: translateX(0);
+}
+
+/* Mengatur area konten agar tidak terjadi tumpang tindih saat sidebar dibuka di mobile (lg ke atas) */
+@media (min-width: 1024px) {
+    .sidebar-expanded ~ #mainContent {
+        margin-left: 240px;
+    }
+    .sidebar-collapsed ~ #mainContent {
+        margin-left: 70px;
+    }
+}
+
+/* Pastikan body dan main mengambil tinggi penuh di semua perangkat */
+html, body {
+    height: 100%;
+}
+#contentArea {
+    height: 100%; /* Agar konten bisa di-scroll di dalam main area */
+}
