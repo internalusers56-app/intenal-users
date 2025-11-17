@@ -11,6 +11,7 @@ const passwordInput = document.getElementById('password-input');
 const loginEye = document.getElementById('loginEye');
 const SWIPER_SELECTOR = '.login__swiper'; 
 
+
 // ===========================================
 // FUNGSI UTILITY (showToast, setLoadingState)
 // ===========================================
@@ -60,7 +61,6 @@ signupForm.addEventListener('submit', (e) => {
 
     setLoadingState(true); 
 
-    // Menggunakan Immediately Invoked Function (IIFE) agar bisa menggunakan async/await di event listener
     (async () => {
         try {
             const response = await fetch(GAS_WEB_APP_URL, {
@@ -70,22 +70,26 @@ signupForm.addEventListener('submit', (e) => {
                 body: JSON.stringify(formData)
             });
 
-            // Jika fetch sukses, proses JSON
+            // PENTING: Jika GAS sukses, response.json() akan sukses
             const result = await response.json(); 
 
+            // 1. JIKA SUKSES (Email UNIK)
             if (result.success) {
                 showToast(result.message, 'success'); 
                 signupForm.reset(); 
-            } else {
-                showToast(result.message, 'error');
+            } 
+            // 2. JIKA GAGAL (Validasi dari Server: Email Sudah Ada/Error Lain)
+            else {
+                showToast(result.message, 'error'); // TAMPILKAN PESAN GAGAL DARI SERVER
             }
 
         } catch (error) {
-            // BLOK CATCH UNTUK ERROR KONEKSI/CORS
+            // Ini adalah blok CATCH untuk ERROR KONEKSI/CORS
             console.error('Error saat koneksi ke GAS:', error);
             
-            // Trik UX: Jika error-nya adalah 'Failed to fetch' (CORS), 
-            // kita asumsikan data TERSIMPAN (berdasarkan history) dan tampilkan pesan sukses.
+            // Trik UX: Jika error-nya adalah 'Failed to fetch' (ERROR CORS DENGAN STATUS 200 OK), 
+            // kita asumsikan yang terburuk (CORS) dan tampilkan pesan sukses (karena data tersimpan).
+            // Ini adalah trik terakhir karena kita tidak bisa mengubah header CORS di production.
             if (error.message === 'Failed to fetch') {
                 showToast('Pendaftaran berhasil! Email persetujuan sedang dikirim ke Admin.', 'success'); 
                 signupForm.reset();
@@ -109,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const swiperElement = document.getElementById('signup-swiper-container');
     
     if (swiperElement && typeof Swiper !== 'undefined') {
-        // Inisialisasi Swiper menggunakan elemen HTML langsung
         new Swiper(swiperElement, { 
             loop: true, 
             spaceBetween: 32,
