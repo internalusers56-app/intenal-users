@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script src="https://cdn.tailwindcss.com"></script>
+<title>SPA Main Layout</title>
+<style>
+.sidebar-collapsed { width: 70px; }
+.sidebar-expanded { width: 240px; }
+.active-menu { background-color: rgba(59,130,246,0.15); }
+</style>
+</head>
+<body class="flex bg-gray-100 h-screen overflow-hidden">
+
+<!-- SIDEBAR -->
+<aside id="sidebar" class="sidebar-expanded bg-gray-900 text-gray-200 transition-all duration-300 flex flex-col">
+<div class="p-4 font-bold text-xl tracking-wide border-b border-gray-700">MY APP</div>
+
+<!-- MENU LIST -->
+<nav class="flex-1 overflow-y-auto text-sm">
+<ul>
+<li data-id="ID-001" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800" onclick="loadPage('dashboard.html', this)"><span>📊</span><span class="menu-text">Dashboard</span></li>
+<li data-id="ID-002" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800" onclick="loadPage('todolist.html', this)"><span>📝</span><span class="menu-text">Todolist</span></li>
+<li data-id="ID-003" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800" ><span>💰</span><span class="menu-text">Simulasi Premi</span></li>
+<li data-id="ID-004" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800"><span>📈</span><span class="menu-text">Marketing Plan</span></li>
+<li data-id="ID-005" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800" onclick="loadPage('aplikasi.html', this)"><span>🗂️</span><span class="menu-text">Register Aplikasi</span></li>
+<li data-id="ID-006" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800" onclick="loadPage('pengiriman.html', this)"><span>📦</span><span class="menu-text">Pengiriman Polis Asuransi</span></li>
+<li data-id="ID-007" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800"><span>⚕️</span><span class="menu-text">Register Klaim</span></li>
+<li data-id="ID-008" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800"><span>👤</span><span class="menu-text">Users</span></li>
+<li data-id="ID-009" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800"><span>🔐</span><span class="menu-text">Role</span></li>
+<li data-id="ID-010" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800"><span>📝</span><span class="menu-text">Menu</span></li>
+<li data-id="ID-011" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800"><span>👥</span><span class="menu-text">Profile</span></li>
+<li data-id="ID-012" class="menu-item p-3 flex items-center gap-3 cursor-pointer hover:bg-gray-800"><span>🚪</span><span class="menu-text">Log Out</span></li>
+</ul>
+</nav>
+</aside>
+
+<!-- MAIN AREA -->
+<div class="flex-1 flex flex-col">
+
+<!-- TOP BAR -->
+<header class="bg-white h-16 flex items-center justify-between px-6 shadow">
+<div id="pageTitle" class="text-xl font-bold">Dashboard</div>
+<div class="flex items-center gap-6">
+<div class="relative cursor-pointer">
+<span class="text-2xl">🔔</span>
+<span class="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1 rounded">3</span>
+</div>
+<div class="flex items-center gap-3 cursor-pointer">
+<img src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full" />
+<div>
+<div class="font-semibold">John Doe</div>
+<div class="text-xs text-gray-500">Admin</div>
+</div>
+</div>
+</div>
+</header>
+
+<main id="contentArea" class="p-6 overflow-auto"></main>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+function loadPage(page, element) {
+    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active-menu'));
+    if (element) element.classList.add('active-menu');
+
+    fetch(page)
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('contentArea').innerHTML = html;
+            if (element) document.getElementById('pageTitle').innerText = element.querySelector('.menu-text').innerText;
+        })
+        .catch(err => console.error('Gagal memuat halaman:', err));
+}
+</script>
+
+</body>
+</html>
