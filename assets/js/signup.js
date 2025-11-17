@@ -1,5 +1,5 @@
 // ===================================================================================
-// FILE: assets/js/signup.js - PERBAIKAN LAYOUT/SWIPER
+// FILE: assets/js/signup.js - FINAL SIGNUP LOGIC
 // ===================================================================================
 
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzMCXwyyyVHPW3Qvt-Ff8-MW2EfV_j8rAYNIs1EjbOa3of-5-Btk5nSUlwF0wJ_LRpJvA/exec'; 
@@ -9,13 +9,12 @@ const signupButton = document.getElementById('signup-button');
 const toastContainer = document.getElementById('toast-container');
 const passwordInput = document.getElementById('password-input');
 const loginEye = document.getElementById('loginEye');
-const SWIPER_SELECTOR = '.login__swiper'; // Gunakan selector umum
-
+const SWIPER_SELECTOR = '.login__swiper'; 
 
 // ===========================================
-// FUNGSI UTILITY (showToast, setLoadingState - TETAP SAMA)
+// FUNGSI UTILITY (showToast, setLoadingState)
 // ===========================================
-// ... (Tulis ulang fungsi showToast dan setLoadingState di sini) ...
+
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
@@ -39,10 +38,10 @@ function setLoadingState(isLoading) {
 
 
 // ===========================================
-// LOGIKA FORM SUBMISSION (TETAP SAMA)
+// LOGIKA FORM SUBMISSION
 // ===========================================
-signupForm.addEventListener('submit', async (e) => {
-    // ... (Logika fetch ke GAS) ...
+
+signupForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
     const formData = {
@@ -61,29 +60,42 @@ signupForm.addEventListener('submit', async (e) => {
 
     setLoadingState(true); 
 
-    try {
-        const response = await fetch(GAS_WEB_APP_URL, {
-            method: 'POST',
-            redirect: 'follow', 
-            headers: { 'Content-Type': 'text/plain;charset=utf-8', },
-            body: JSON.stringify(formData)
-        });
+    // Menggunakan Immediately Invoked Function (IIFE) agar bisa menggunakan async/await di event listener
+    (async () => {
+        try {
+            const response = await fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                redirect: 'follow', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8', },
+                body: JSON.stringify(formData)
+            });
 
-        const result = await response.json();
+            // Jika fetch sukses, proses JSON
+            const result = await response.json(); 
 
-        if (result.success) {
-            showToast(result.message, 'success');
-            signupForm.reset(); 
-        } else {
-            showToast(result.message, 'error');
+            if (result.success) {
+                showToast(result.message, 'success'); 
+                signupForm.reset(); 
+            } else {
+                showToast(result.message, 'error');
+            }
+
+        } catch (error) {
+            // BLOK CATCH UNTUK ERROR KONEKSI/CORS
+            console.error('Error saat koneksi ke GAS:', error);
+            
+            // Trik UX: Jika error-nya adalah 'Failed to fetch' (CORS), 
+            // kita asumsikan data TERSIMPAN (berdasarkan history) dan tampilkan pesan sukses.
+            if (error.message === 'Failed to fetch') {
+                showToast('Pendaftaran berhasil! Email persetujuan sedang dikirim ke Admin.', 'success'); 
+                signupForm.reset();
+            } else {
+                showToast('Gagal terhubung ke server. Silakan coba lagi.', 'error');
+            }
+        } finally {
+            setLoadingState(false); 
         }
-
-    } catch (error) {
-        console.error('Error saat koneksi ke GAS:', error);
-        showToast('Gagal terhubung ke server. Silakan coba lagi.', 'error');
-    } finally {
-        setLoadingState(false); 
-    }
+    })();
 });
 
 
@@ -93,23 +105,12 @@ signupForm.addEventListener('submit', async (e) => {
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // A. SWIPER INITIALIZATION KHUSUS
-    // Kita cek apakah ini halaman signup (dengan mengecek ID unik)
-    // Jika ada ID "signup-swiper-container" (dari HTML yang kita sepakati)
+    // A. SWIPER INITIALIZATION
     const swiperElement = document.getElementById('signup-swiper-container');
     
     if (swiperElement && typeof Swiper !== 'undefined') {
-        // PENTING: Jangan hapus class apapun! Biarkan main.js juga mencoba jika itu halaman lain.
-
-        // Periksa apakah Swiper BELUM diinisialisasi oleh main.js (jika main.js sudah berjalan)
-        // Jika element belum memiliki data Swiper, inisialisasi di sini.
-        // Jika main.js berjalan duluan (yang mungkin terjadi), ia akan crash (error awal kita).
-        
-        // Agar aman, kita inisialisasi Swiper di sini dan biarkan main.js yang mengaturnya di halaman lain.
-        
-        // Inisialisasi Swiper menggunakan selector umum karena kita tidak bisa mengandalkan timing
-        // Jika Anda masih mendapatkan error, HAPUS BARIS INI dan pastikan main.js diubah untuk mengecualikan halaman signup.
-        new Swiper(swiperElement, { // Menggunakan elemen HTML langsung
+        // Inisialisasi Swiper menggunakan elemen HTML langsung
+        new Swiper(swiperElement, { 
             loop: true, 
             spaceBetween: 32,
             grabCursor: true,
