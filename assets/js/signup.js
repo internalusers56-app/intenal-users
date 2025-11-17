@@ -1,5 +1,5 @@
 // GANTI DENGAN URL WEB APP GAS SETELAH DI-DEPLOY!
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/..../exec'; 
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzMCXwyyyVHPW3Qvt-Ff8-MW2EfV_j8rAYNIs1EjbOa3of-5-Btk5nSUlwF0wJ_LRpJvA/exec'; 
 
 const signupForm = document.getElementById('signup-form');
 const signupButton = document.getElementById('signup-button');
