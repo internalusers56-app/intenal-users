@@ -9,6 +9,25 @@ const signupButton = document.getElementById('signup-button');
 const toastContainer = document.getElementById('toast-container');
 const passwordInput = document.getElementById('password-input');
 const loginEye = document.getElementById('loginEye');
+const whatsappInput = document.getElementById('whatsapp-input');
+
+
+// ===========================================
+// FORMAT OTOMATIS NO WHATSAPP → 0xxx → +62xxx
+// ===========================================
+whatsappInput.addEventListener('input', () => {
+    let value = whatsappInput.value.replace(/\D/g, '');
+
+    if (value.startsWith("0")) {
+        value = "+62" + value.substring(1);
+    }
+
+    if (value.startsWith("8")) {
+        value = "+62" + value;
+    }
+
+    whatsappInput.value = value;
+});
 
 
 // ===========================================
@@ -27,7 +46,7 @@ function showToast(message, type = 'success') {
     setTimeout(() => { 
         toast.classList.remove('show'); 
         setTimeout(() => toast.remove(), 500);
-    }, 5000);
+    }, 4500);
 }
 
 function setLoadingState(isLoading) {
@@ -76,7 +95,7 @@ signupForm.addEventListener('submit', (e) => {
                 redirect: 'follow',
                 headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({
-                    action: "signup",   // ← WAJIB
+                    action: "signup",
                     ...formData
                 })
             });
@@ -100,7 +119,7 @@ signupForm.addEventListener('submit', (e) => {
                 showToast('Gagal terhubung ke server. Silakan coba lagi.', 'error');
             }
         } finally {
-            setLoadingState(false);
+            setTimeout(() => setLoadingState(false), 2500);
         }
     })();
 });
