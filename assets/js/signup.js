@@ -2,7 +2,7 @@
 // FILE: assets/js/signup.js - FINAL SIGNUP LOGIC
 // ===================================================================================
 
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxgxMP9VAl-GScrvaoYqI8kAABGlXlRhoaxK7GEqG7qtK_7LGuk2W4Qe1B6MXP20P8/exec'; 
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwJeKLmp6otYqwP2KNd7OJAr1F2TalEpnJw4xs1D4TdAu4ObppDeci5cng5M2JhDbE/exec'; 
 
 const signupForm = document.getElementById('signup-form');
 const signupButton = document.getElementById('signup-button');
