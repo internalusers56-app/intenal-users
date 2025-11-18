@@ -92,7 +92,7 @@ signupForm.addEventListener('submit', (e) => {
         try {
             const response = await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
-                redirect: 'follow',
+                redirect: 'no-cors',
                 headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({
                     action: "signup",
